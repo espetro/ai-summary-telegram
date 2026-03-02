@@ -9,34 +9,20 @@ export interface SessionState {
 }
 
 export interface IngestJobPayload {
-  type: 'ingest';
-  source: string;
-  options?: {
-    chunkSize?: number;
-    format?: 'markdown' | 'json' | 'html';
-  };
+  itemId: string;
 }
 
 export interface NotifyJobPayload {
-  type: 'notify';
-  recipients: string[];
-  subject: string;
-  body: string;
-  metadata?: Record<string, unknown>;
+  userId: string;
 }
 
 export interface DigestJobPayload {
-  type: 'digest';
-  items: string[];
-  recipient: string;
-  summary?: string;
-  detail?: 'brief' | 'detailed' | 'full';
+  userId: string;
 }
 
 export interface NudgeJobPayload {
-  type: 'nudge';
-  targetId: string;
-  targetItemIds: string[];
+  userId: string;
+  sessionId: string;
+  itemIds: string[];
   urgency?: 'low' | 'normal' | 'high';
-  context?: Record<string, unknown>;
 }
