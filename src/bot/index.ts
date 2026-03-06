@@ -6,6 +6,7 @@ import { config } from '../config';
 import type { BotContext } from '../types/bot';
 import { authMiddleware } from './middleware/auth';
 import { handleUrlMessage, handlePhotoMessage } from './handlers/ingest';
+import { handleCallback } from './handlers/callbacks';
 import { startCommand } from './commands/start';
 import { reviewCommand } from './commands/review';
 import { askCommand } from './commands/ask';
@@ -67,7 +68,7 @@ bot.command('help', async (ctx) => {
 bot.on('message:text', handleUrlMessage);
 bot.on('message:photo', handlePhotoMessage);
 
-// Callback query handler
+bot.callbackQuery(/^session:/, handleCallback);
 bot.callbackQuery(/^confirm_delete_/, handleDeleteConfirmation);
 bot.callbackQuery(/^cancel_delete_/, handleDeleteConfirmation);
 

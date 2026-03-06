@@ -68,6 +68,8 @@ export async function handleUrlMessage(ctx: BotContext) {
           scrapeStatus: 'pending',
           reviewStatus: 'pending',
           sourceSurface: intent === 'immediate' ? 'immediate' : 'manual',
+          contentEnc: '',
+          summaryEnc: '',
         })
         .returning();
 
