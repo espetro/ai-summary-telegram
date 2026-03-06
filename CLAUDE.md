@@ -1,3 +1,9 @@
+## Documentation guidelines
+
+- Keep plans at `./plans/*`
+- When asked to save session progress, prepare a summary of the session and save it at `./sessions/*`
+
+## Developer guidelines
 
 Default to using Bun instead of Node.js.
 
@@ -9,7 +15,7 @@ Default to using Bun instead of Node.js.
 - Use `bunx <package> <command>` instead of `npx <package> <command>`
 - Bun automatically loads .env, so don't use dotenv.
 
-## APIs
+### APIs
 
 - `Bun.serve()` supports WebSockets, HTTPS, and routes. Don't use `express`.
 - `bun:sqlite` for SQLite. Don't use `better-sqlite3`.
@@ -19,7 +25,7 @@ Default to using Bun instead of Node.js.
 - Prefer `Bun.file` over `node:fs`'s readFile/writeFile
 - Bun.$`ls` instead of execa.
 
-## Testing
+### Testing
 
 Use `bun test` to run tests.
 
@@ -31,7 +37,7 @@ test("hello world", () => {
 });
 ```
 
-## Frontend
+### Frontend
 
 Use HTML imports with `Bun.serve()`. Don't use `vite`. HTML imports fully support React, CSS, Tailwind.
 
