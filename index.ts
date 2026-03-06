@@ -17,16 +17,17 @@ async function main() {
     await startJobs();
     console.log('Job queue started');
 
-    // 2. Start Telegram bot (fails gracefully if token is invalid)
-    console.log('Starting Telegram bot...');
-    await startBot();
-    // 3. Start HTTP server with Hono
+    // 2. Start HTTP server FIRST (so it's always available)
     console.log(`Starting HTTP server on port ${config.PORT}...`);
     Bun.serve({
       port: config.PORT,
       fetch: api.fetch,
     });
     console.log(`HTTP server started on port ${config.PORT}`);
+
+    // 3. Start Telegram bot (non-blocking - runs in background)
+    console.log('Starting Telegram bot...');
+    startBot().catch(err => console.warn('Bot error:', err));
 
     console.log('');
     console.log('✓ All services started successfully');
