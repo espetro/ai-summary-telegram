@@ -10,6 +10,13 @@ export const authMiddleware: Middleware<BotContext> = async (ctx, next) => {
     return;
   }
 
+  // Skip auth for /start command to allow registration
+  const text = ctx.message?.text;
+  if (text?.startsWith('/start')) {
+    await next();
+    return;
+  }
+
   const user = await db.query.users.findFirst({
     where: and(eq(users.telegramId, telegramId), isNull(users.deletedAt)),
   });
