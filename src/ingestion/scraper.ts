@@ -1,4 +1,7 @@
 import { $ } from 'bun';
+import { join } from 'path';
+
+const VENV_TRAFILATURA = join(process.cwd(), '.venv', 'bin', 'trafilatura');
 
 export interface ScrapeResult {
   text: string;
@@ -18,13 +21,30 @@ function isBlocked(url: string): boolean {
   }
 }
 
+export async function checkTrafilaturaAvailable(): Promise<boolean> {
+  try {
+    const result = await $`${VENV_TRAFILATURA} --version`.quiet();
+    return result.exitCode === 0;
+  } catch {
+    return false;
+  }
+}
+
+export async function checkInternetAccess(): Promise<boolean> {
+  try {
+    const response = await fetch('https://r.jina.ai/', { method: 'HEAD', signal: AbortSignal.timeout(5000) });
+    return response.status !== 0;
+  } catch {
+    return false;
+  }
+}
+
 /**
  * Scrape content from URL using trafilatura (Python CLI) with Jina Reader fallback
  */
 export async function scrapeContent(url: string): Promise<ScrapeResult> {
   // Check blocklist
   if (isBlocked(url)) {
-    // For blocked domains, use Jina Reader which returns partial content
     return scrapeWithJina(url);
   }
 
@@ -33,7 +53,6 @@ export async function scrapeContent(url: string): Promise<ScrapeResult> {
     const result = await scrapeWithTrafilatura(url);
     return { ...result, status: 'full' };
   } catch (error) {
-    // Fallback to Jina Reader on any error
     console.warn(`Trafilatura failed for ${url}, falling back to Jina:`, error);
     return scrapeWithJina(url);
   }
@@ -44,7 +63,7 @@ export async function scrapeContent(url: string): Promise<ScrapeResult> {
  */
 async function scrapeWithTrafilatura(url: string): Promise<Omit<ScrapeResult, 'status'>> {
   try {
-    const result = await $`trafilatura --url ${url} --output-format json`.json();
+    const result = await $`${VENV_TRAFILATURA} --url ${url} --output-format json`.json();
 
     if (!result || typeof result !== 'object') {
       throw new Error('Invalid trafilatura response');
