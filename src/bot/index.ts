@@ -15,7 +15,7 @@ import { queueCommand } from './commands/queue';
 import { settingsCommand } from './commands/settings';
 import { exportCommand } from './commands/export';
 import { deleteAccountCommand, handleDeleteConfirmation } from './commands/delete_account';
-
+import { regenerateCommand } from './commands/regenerate';
 
 export const bot = new Bot<BotContext>(config.TELEGRAM_BOT_TOKEN);
 
@@ -47,6 +47,7 @@ bot.command('queue', queueCommand);
 bot.command('settings', settingsCommand);
 bot.command('export', exportCommand);
 bot.command('delete_account', deleteAccountCommand);
+bot.command('regenerate', regenerateCommand);
 
 // Help command
 bot.command('help', async (ctx) => {
@@ -57,6 +58,7 @@ bot.command('help', async (ctx) => {
       `/ask <query> - Search your queue with AI\n` +
       `/invite - Generate invite link\n` +
       `/queue - View your pending items\n` +
+      `/regenerate [index] - Regenerate AI summary for an item\n` +
       `/settings - Configure preferences\n` +
       `/export - Export your data\n` +
       `/delete_account - Delete your account\n\n` +

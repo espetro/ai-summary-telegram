@@ -65,7 +65,7 @@ export const chunks = pgTable('chunks', {
   userId: uuid('user_id').notNull(),
   chunkIndex: integer('chunk_index').notNull(),
   contentEnc: text('content_enc').notNull(),
-  embedding: vector('embedding', { dimensions: 1536 }),
+  embedding: vector('embedding', { dimensions: 768 }),
   createdAt: timestamp('created_at').notNull().defaultNow(),
 }, (table) => ({
   userIdx: index('chunks_user_idx').on(table.userId),

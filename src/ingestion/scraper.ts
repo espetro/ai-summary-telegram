@@ -63,7 +63,19 @@ export async function scrapeContent(url: string): Promise<ScrapeResult> {
  */
 async function scrapeWithTrafilatura(url: string): Promise<Omit<ScrapeResult, 'status'>> {
   try {
-    const result = await $`${VENV_TRAFILATURA} --url ${url} --output-format json`.json();
+    const rawResult = await $`${VENV_TRAFILATURA} --url ${url} --output-format json`.quiet();
+    const rawText = rawResult.stdout.toString().trim();
+    
+    if (!rawText || rawText.startsWith('ERROR') || rawResult.exitCode !== 0) {
+      throw new Error(rawText || `Trafilatura exited with code ${rawResult.exitCode}`);
+    }
+
+    let result: { text?: string; content?: string; title?: string; titletext?: string; author?: string };
+    try {
+      result = JSON.parse(rawText);
+    } catch {
+      throw new Error('Invalid JSON response from trafilatura');
+    }
 
     if (!result || typeof result !== 'object') {
       throw new Error('Invalid trafilatura response');
